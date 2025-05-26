@@ -1,28 +1,40 @@
-pipeline {  
-    agent any  
-    stages {  
-        stage('Test DVWA') {  
-            steps {  
-                sh 'echo "¡DVWA está lista para análisis!"'  
-            }  
-        }  
-    }  
-}  
-stage('Analizar con SonarQube') {  
-    steps {  
-        sh 'sonar-scanner -Dsonar.projectKey=DVWA'  
-    }  
+pipeline {
+    agent any
+    
+    tools {
+        sonarQubeScanner 'SonarQube' // Make sure this tool is configured in Jenkins
     }
-    post {  
-        always {  
-            echo 'Análisis completado.'  
-        }  
+    
+    environment {
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_AUTH_TOKEN = credentials('sonar-token') // Recommended to use token instead of login/password
     }
-    tools {  
-        sonarQube 'SonarQube'  
+    
+    stages {
+        stage('Test DVWA') {
+            steps {
+                sh 'echo "¡DVWA está lista para análisis!"'
+            }
+        }
+        
+        stage('Analizar con SonarQube') {
+            steps {
+                withSonarQubeEnv('SonarQube') { // Requires SonarQube plugin
+                    sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=DVWA \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                        -Dsonar.login=${SONAR_AUTH_TOKEN}
+                    '''
+                }
+            }
+        }
     }
-    environment {  
-        SONAR_HOST_URL = 'http://localhost:9000'  
-        SONAR_LOGIN = credentials('admin')
-        SONAR_PASSWORD = credentials('12345678')
-    } 
+    
+    post {
+        always {
+            echo 'Análisis completado.'
+        }
+    }
+}
