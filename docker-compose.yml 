@@ -1,0 +1,12 @@
+version: '3'  
+services:  
+  dvwa:  
+    image: vulnerables/web-dvwa  
+    ports:  
+      - "80:80"  
+    environment:  
+      - PHPIDS=off          # Desactiva el sistema de detección para pruebas  
+  mysql:  
+    image: mysql:5.7  
+    environment:  
+      - MYSQL_ROOT_PASSWORD=insecure_pwd  
