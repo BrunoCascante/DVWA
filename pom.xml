@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/3.9.9"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/3.9.9 http://maven.apache.org/xsd/maven-3.9.9.xsd">
+    <modelVersion>3.9.9</modelVersion>
+    
+    <groupId>com.example</groupId>
+    <artifactId>dvwa</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+    
+    <name>DVWA Security Analysis</name>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.11.0.3922</version>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.language>php</sonar.language>
+        <sonar.sources>.</sonar.sources>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+        <sonar.exclusions>**/config.inc.php</sonar.exclusions>
+    </properties>
+</project>
