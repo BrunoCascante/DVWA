@@ -24,5 +24,5 @@ stage('Analizar con SonarQube') {
     environment {  
         SONAR_HOST_URL = 'http://localhost:9000'  
         SONAR_LOGIN = credentials('admin')
-        SONAR_PASSWORD = credentials('admin')
+        SONAR_PASSWORD = credentials('12345678')
     } 
