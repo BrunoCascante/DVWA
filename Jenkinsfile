@@ -4,7 +4,6 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'SonarQube'
         SONARQUBE_TOKEN = credentials('sonarqube-token')
-        GIT_CREDENTIALS = credentials('github-token')
     }
 
     stages {
@@ -66,7 +65,11 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/*.json, **/*.html', allowEmptyArchive: true
+            script {
+                echo "Archivos generados:"
+                sh 'find . -type f'
+            }
+            archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
         }
     }
 }
