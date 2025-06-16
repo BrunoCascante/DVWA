@@ -1,0 +1,1 @@
+docker run -t owasp/zap2docker-stable zap-baseline.py -t http://localhost:80 -r zap-report.html
