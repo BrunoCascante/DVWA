@@ -66,12 +66,22 @@ pipeline {
     }
 
     post {
+        success {
+            echo '✅ Pipeline completado exitosamente.'
+        }
+
+        failure {
+            echo '❌ El pipeline ha fallado. Revisa las etapas anteriores.'
+        }
+
         always {
-            script {
-                echo "Archivos generados:"
-                sh 'find . -type f'
-            }
+            echo '📦 Archivos generados en el workspace:'
+            sh 'find . -type f'
+
             archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
+
+            echo '📁 Archivos archivados para revisión.'
         }
     }
+
 }
