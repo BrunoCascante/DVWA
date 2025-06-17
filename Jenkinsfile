@@ -9,10 +9,12 @@ pipeline {
         
         stage('Verificar herramientas') {
             steps {
+                sh 'echo "🔍 Verificando herramientas instaladas..."'
                 sh 'which gitleaks && gitleaks version'
-                sh 'which dependency-check.sh || echo "⚠️ Dependency-check no instalado"'
-                sh 'which trivy || echo "⚠️ Trivy no instalado"'
-                sh 'which mvn || echo "⚠️ Maven no instalado"'
+                sh 'which dependency-check.sh || echo "⚠️ Dependency-check no está instalado"'
+                sh 'which trivy || echo "⚠️ Trivy no está instalado"'
+                sh 'which mvn || echo "⚠️ Maven no está instalado"'
+                sh '[ -f ./run-zap.sh ] && echo "✅ run-zap.sh encontrado" || echo "❌ run-zap.sh no está en el workspace"'
             }
         }
 
