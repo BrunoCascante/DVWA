@@ -9,10 +9,10 @@ pipeline {
         
         stage('Verificar herramientas') {
             steps {
-                sh 'which gitleaks'
-                sh 'gitleaks version'
-                sh 'which node'
-                sh 'node -v'
+                sh 'which gitleaks && gitleaks version'
+                sh 'which dependency-check.sh || echo "⚠️ Dependency-check no instalado"'
+                sh 'which trivy || echo "⚠️ Trivy no instalado"'
+                sh 'which mvn || echo "⚠️ Maven no instalado"'
             }
         }
 
