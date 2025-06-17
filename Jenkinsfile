@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube'
-        SONARQUBE_TOKEN = credentials('sonar-token')  // <- este es el ID correcto
+        // Eliminamos SONARQUBE_TOKEN porque no se usa
     }
 
     stages {
@@ -83,5 +83,4 @@ pipeline {
             echo '📁 Archivos archivados para revisión.'
         }
     }
-
 }
