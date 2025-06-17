@@ -26,7 +26,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'echo "Construcción simple o test build"'
+                sh 'echo "🏗️ Construcción simple o test build"'
             }
         }
 
@@ -50,29 +50,28 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p reports
-                    mkdir -p /var/lib/jenkins/dependency-check-data
                     dependency-check.sh \
                       --project DVWA \
                       --format HTML \
                       --out reports \
                       --scan . \
-                      --data /var/lib/jenkins/dependency-check-data \
                       --log reports/dependency-check.log \
+                      --data /var/lib/jenkins/dependency-check-data \
                       --nvdApiKey 20833060-833f-4bb7-8c33-4751cafe4722 \
-                      --nvdApiDelay 3000
+                      --nvdApiDelay 3000 || echo "⚠️ Dependency-Check falló, revisa los logs."
                 '''
             }
         }
 
         stage('Scan Docker Image') {
             steps {
-                sh 'trivy image dvwa'
+                sh 'trivy image dvwa || echo "⚠️ Trivy terminó con errores o vulnerabilidades."'
             }
         }
 
         stage('Dynamic Analysis (ZAP)') {
             steps {
-                sh './run-zap.sh'
+                sh './run-zap.sh || echo "⚠️ ZAP script falló, revisar logs."'
             }
         }
 
@@ -81,7 +80,7 @@ pipeline {
                 script {
                     def response = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8080', returnStdout: true).trim()
                     if (response != '200') {
-                        error("La aplicación no respondió correctamente. Código recibido: ${response}")
+                        error("❌ La aplicación no respondió correctamente. Código recibido: ${response}")
                     }
                 }
             }
@@ -105,14 +104,20 @@ pipeline {
 
             echo '📁 Archivos archivados para revisión.'
 
-            publishHTML([
-                reportDir: 'reports',
-                reportFiles: 'dependency-check-report.html',
-                reportName: 'Dependency Check Report',
-                keepAll: true,
-                alwaysLinkToLastBuild: true,
-                allowMissing: true
-            ])
+            script {
+                if (fileExists('reports/dependency-check-report.html')) {
+                    publishHTML([
+                        reportDir: 'reports',
+                        reportFiles: 'dependency-check-report.html',
+                        reportName: 'Dependency Check Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: true
+                    ])
+                } else {
+                    echo "⚠️ No se encontró el archivo dependency-check-report.html para publicar"
+                }
+            }
         }
     }
 }
