@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube'
+        SONARQUBE_TOKEN = credentials('sonar-token')  // <- este es el ID correcto
     }
 
     stages {
