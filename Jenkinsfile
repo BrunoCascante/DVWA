@@ -67,9 +67,12 @@ pipeline {
 
         stage('Scan Docker Image') {
             steps {
-                sh 'trivy image dvwa || echo "⚠️ Trivy terminó con errores o vulnerabilidades."'
+                sh '''
+                    trivy image -f json -o reports/trivy-report.json ghcr.io/digininja/dvwa || echo "⚠️ Trivy terminó con errores o vulnerabilidades."
+                '''
             }
         }
+
 
         stage('Dynamic Analysis (ZAP)') {
             steps {

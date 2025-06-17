@@ -1,13 +1,28 @@
 version: '3'
 services:
-  dvwa:
-    image: vulnerables/web-dvwa
-    ports:
-      - "80:80"
+  db:
+    image: mariadb:10
+    container_name: dvwa-db
     environment:
-      - MYSQL_ROOT_PASSWORD=p@ssw0rd
+      MYSQL_ROOT_PASSWORD: p@ssw0rd
+      MYSQL_USER: dvwa
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: dvwa
+    networks:
+      - dvwa-net
+
+  web:
+    image: ghcr.io/digininja/dvwa
+    container_name: dvwa-web
+    ports:
+      - "4280:80"
+    environment:
+      - MYSQL_HOST=dvwa-db
       - MYSQL_USER=dvwa
       - MYSQL_PASSWORD=secret
+      - MYSQL_DATABASE=dvwa
+    depends_on:
+      - db
     networks:
       - dvwa-net
 
