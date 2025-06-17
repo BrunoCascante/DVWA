@@ -48,9 +48,10 @@ pipeline {
 
         stage('Scan Dependencies') {
             steps {
-                sh 'dependency-check.sh --project DVWA --format HTML --out reports/ --scan .'
+                sh 'dependency-check.sh --project DVWA --format HTML --out reports/ --scan . --log dependency-check.log --nvdApiDelay 3000'
             }
         }
+
 
         stage('Scan Docker Image') {
             steps {
