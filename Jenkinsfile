@@ -65,14 +65,13 @@ pipeline {
 
     post {
         always {
-            node {
-                script {
-                    echo "Archivos generados:"
-                    sh 'find . -type f'
-                }
-                archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
+            script {
+                echo "Archivos generados:"
+                sh 'find . -type f'
             }
+            archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
         }
     }
+
 
 }
