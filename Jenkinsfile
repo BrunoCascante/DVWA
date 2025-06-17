@@ -50,12 +50,15 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p reports
+                    mkdir -p /var/lib/jenkins/dependency-check-data
                     dependency-check.sh \
                       --project DVWA \
                       --format HTML \
                       --out reports \
                       --scan . \
+                      --data /var/lib/jenkins/dependency-check-data \
                       --log reports/dependency-check.log \
+                      --nvdApiKey 20833060-833f-4bb7-8c33-4751cafe4722 \
                       --nvdApiDelay 3000
                 '''
             }
