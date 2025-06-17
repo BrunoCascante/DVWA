@@ -4,6 +4,15 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'SonarQube'
     }
+    
+    stage('Verificar herramientas') {
+        steps {
+            sh 'which gitleaks'
+            sh 'gitleaks version'
+            sh 'which node'
+            sh 'node -v'
+        }
+    }
 
     stages {
         stage('Checkout') {
