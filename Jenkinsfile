@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube'
-        SONARQUBE_TOKEN = credentials('sonar-token')
     }
 
     stages {
@@ -22,7 +21,9 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    sh 'mvn clean verify sonar:sonar'
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                        sh "mvn clean verify sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
+                    }
                 }
             }
         }
@@ -72,6 +73,4 @@ pipeline {
             archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
         }
     }
-
-
 }
