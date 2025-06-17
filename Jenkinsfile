@@ -48,8 +48,16 @@ pipeline {
 
         stage('Scan Dependencies') {
             steps {
-                sh 'mkdir -p reports' // <- nos aseguramos de que existe
-                sh 'dependency-check.sh --project DVWA --format HTML --out reports/ --scan . --log dependency-check.log --nvdApiDelay 3000'
+                sh '''
+                    mkdir -p reports
+                    dependency-check.sh \
+                      --project DVWA \
+                      --format HTML \
+                      --out reports \
+                      --scan . \
+                      --log reports/dependency-check.log \
+                      --nvdApiDelay 3000
+                '''
             }
         }
 
@@ -90,11 +98,10 @@ pipeline {
             echo '📦 Archivos generados en el workspace:'
             sh 'find . -type f'
 
-            archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'reports/**/*.html, reports/**/*.log, **/*.json', allowEmptyArchive: true
 
             echo '📁 Archivos archivados para revisión.'
 
-            // 🆕 Publicar informe HTML
             publishHTML([
                 reportDir: 'reports',
                 reportFiles: 'dependency-check-report.html',
