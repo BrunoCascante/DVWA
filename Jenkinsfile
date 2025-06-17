@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube'
-        SONARQUBE_TOKEN = credentials('sonarqube-token')
+        SONARQUBE_TOKEN = credentials('sonar-token')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'github-token', url: 'https://github.com/BrunoCascante/DVWA.git'
+                git credentialsId: 'Github-token', url: 'https://github.com/BrunoCascante/DVWA.git'
             }
         }
 
@@ -65,11 +65,14 @@ pipeline {
 
     post {
         always {
-            script {
-                echo "Archivos generados:"
-                sh 'find . -type f'
+            node {
+                script {
+                    echo "Archivos generados:"
+                    sh 'find . -type f'
+                }
+                archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
             }
-            archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
         }
     }
+
 }
