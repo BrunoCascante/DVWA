@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube'
-        // Eliminamos SONARQUBE_TOKEN porque no se usa
     }
 
     stages {
@@ -22,7 +21,7 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'sonarqube_token', variable: 'SONAR_TOKEN')]) {
                         sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN'
                     }
                 }
