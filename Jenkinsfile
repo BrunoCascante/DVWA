@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        
+
         stage('Verificar herramientas') {
             steps {
                 sh 'echo "🔍 Verificando herramientas instaladas..."'
@@ -48,10 +48,10 @@ pipeline {
 
         stage('Scan Dependencies') {
             steps {
+                sh 'mkdir -p reports' // <- nos aseguramos de que existe
                 sh 'dependency-check.sh --project DVWA --format HTML --out reports/ --scan . --log dependency-check.log --nvdApiDelay 3000'
             }
         }
-
 
         stage('Scan Docker Image') {
             steps {
@@ -93,6 +93,16 @@ pipeline {
             archiveArtifacts artifacts: 'reports/**/*.html, **/*.json', allowEmptyArchive: true
 
             echo '📁 Archivos archivados para revisión.'
+
+            // 🆕 Publicar informe HTML
+            publishHTML([
+                reportDir: 'reports',
+                reportFiles: 'dependency-check-report.html',
+                reportName: 'Dependency Check Report',
+                keepAll: true,
+                alwaysLinkToLastBuild: true,
+                allowMissing: true
+            ])
         }
     }
 }
